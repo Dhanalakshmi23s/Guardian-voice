@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Speech-to-Text with Flask</title>
+</head>
+<body style="background-image: url(https://th.bing.com/th/id/OIP.ILSJw5eQ0U_9fbmN-sLe2AHaFM?w=254&h=180&c=7&r=0&o=5&pid=1.7); background-size: cover; height: 100vh; display: flex; justify-content: center; align-items: center; flex-direction: column;">
+
+    <h1 style="color: white; margin-bottom: 30px;">Speech-to-Text with Flask</h1>
+    
+    <div id="speechBox" style="background-color: rgba(255, 255, 255, 0.8); padding: 20px; border-radius: 10px; text-align: center; max-width: 400px;">
+        <button id="startRecording" style="padding: 10px 20px; font-size: 16px; background-color: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer;">Start Recording</button>
+        <p id="result" style="font-size: 18px; margin-top: 20px; color: black; display: none;"></p>
+        <p id="recording" style="font-size: 18px; margin-top: 20px; color: black; display: none;">Recording...</p>
+        <button id="playSound" style="padding: 10px 20px; font-size: 16px; background-color: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer; display: none;">Play Sound</button>
+    </div>
+
+    <script>
+        document.getElementById('startRecording').addEventListener('click', function() {
+            document.getElementById('startRecording').style.display = 'none';
+            document.getElementById('recording').style.display = 'block';
+            fetch('/speech-to-text', {
+                method: 'POST'
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('result').textContent = "You said: " + data.result;
+                document.getElementById('recording').style.display = 'none';
+                document.getElementById('result').style.display = 'block';
+                document.getElementById('playSound').style.display = 'block';
+            })
+            .catch(error => console.error('Error:', error));
+        });
+
+        document.getElementById('playSound').addEventListener('click', function() {
+            var audio = new Audio('/static/output.mp3'); // Corrected path to the audio file
+            audio.play();
+        });
+    </script>
+</body>
+</html>
